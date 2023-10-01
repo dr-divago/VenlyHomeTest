@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,8 +20,9 @@ public class WordService {
     private final RelationRepository relationRepository;
 
     public List<RelationshipResponseJson> getRelationshipResponseJsons(Optional<Boolean> maybeInverse, RelationshipType searchRelation) {
+        Predicate<RelationshipType> p = x -> searchRelation.equals(RelationshipType.NONE) || x.equals(searchRelation);
         List<RelationshipResponseJson> relationship = relationRepository.findAll().stream()
-                .filter( x -> searchRelation.equals(RelationshipType.NONE) || x.getRelationshipType().equals(searchRelation))
+                .filter( x -> p.test(x.getRelationshipType()))
                 .map( x -> new RelationshipResponseJson(x.getW1(), x.getW2(), x.getRelationshipType()))
                 .collect(Collectors.toList());
 
