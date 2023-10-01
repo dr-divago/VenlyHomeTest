@@ -6,6 +6,8 @@ public enum RelationshipType {
 
     @JsonProperty("synonym")
     SYNONYM,
+    @JsonProperty("antonym")
     ANTONYM,
+    @JsonProperty("related")
     RELATED
 }

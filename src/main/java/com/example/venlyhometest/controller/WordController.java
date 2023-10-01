@@ -2,17 +2,17 @@ package com.example.venlyhometest.controller;
 
 
 import com.example.venlyhometest.dto.RelationshipRequest;
+import com.example.venlyhometest.dto.RelationshipResponseJson;
 import com.example.venlyhometest.entity.Relationship;
 import com.example.venlyhometest.repo.RelationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -27,5 +27,13 @@ public class WordController {
         Relationship relationship = new Relationship(request.getW1(), request.getW2(), request.getType());
         relationRepository.save(relationship);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/get-words-relation")
+    public ResponseEntity<List<RelationshipResponseJson>> getRelation() {
+        List<RelationshipResponseJson> relationship = relationRepository.findAll().stream()
+                .map( x -> new RelationshipResponseJson(x.getW1(), x.getW2(), x.getRelationshipType()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(relationship);
     }
 }
